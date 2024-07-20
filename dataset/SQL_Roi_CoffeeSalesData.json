@@ -1,0 +1,20 @@
+{
+	"name": "SQL_Roi_CoffeeSalesData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQL_local_roi",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Schema_name": {
+				"type": "string"
+			},
+			"Table_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}

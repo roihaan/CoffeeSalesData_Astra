@@ -57,7 +57,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": {
-								"value": "@concat('farid/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"value": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
 							"file_name": "201904_sales_reciepts.csv"
@@ -120,7 +120,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": {
-								"value": "@concat('farid/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"value": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
 							"file_name": "customer.csv"
@@ -183,7 +183,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": {
-								"value": "@concat('farid/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"value": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
 							"file_name": "dates.csv"
@@ -246,7 +246,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": {
-								"value": "@concat('farid/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"value": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
 							"file_name": "generations.csv"
@@ -309,7 +309,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": {
-								"value": "@concat('farid/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"value": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
 							"file_name": "pastry_inventory.csv"
@@ -372,7 +372,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": {
-								"value": "@concat('farid/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"value": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
 							"file_name": "product.csv"
@@ -435,7 +435,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": {
-								"value": "@concat('farid/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"value": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
 							"file_name": "sales_outlet.csv"
@@ -458,6 +458,11 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"value": ""
+							}
+						],
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -498,7 +503,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": {
-								"value": "@concat('farid/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"value": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
 							"file_name": "sales_targets.csv"

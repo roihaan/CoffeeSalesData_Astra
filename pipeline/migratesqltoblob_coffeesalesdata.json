@@ -1,5 +1,5 @@
 {
-	"name": "migratesqltoblol_coffeesalesdata",
+	"name": "migratesqltoblob_coffeesalesdata",
 	"properties": {
 		"activities": [
 			{

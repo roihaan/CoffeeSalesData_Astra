@@ -17,6 +17,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -46,8 +55,8 @@
 						"referenceName": "sql_roii",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema_name": "dbo.",
-							"table_name": "201904_sales_reciepts.csv"
+							"schema_name": "dbo",
+							"table_name": "201904_sales_reciepts"
 						}
 					}
 				],
@@ -56,7 +65,7 @@
 						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
-							"file_name": "201904_sales_reciepts",
+							"file_name": "201904_sales_reciepts.csv",
 							"folder_name": {
 								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
@@ -80,6 +89,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -94,13 +112,32 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
+				"inputs": [
+					{
+						"referenceName": "sql_roii",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "customer"
+						}
+					}
+				],
 				"outputs": [
 					{
 						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
+							"file_name": "customer.csv",
 							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
 						}
 					}
@@ -128,125 +165,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
-					},
-					"enableStaging": false
-				},
-				"outputs": [
-					{
-						"referenceName": "adls_csv",
-						"type": "DatasetReference",
-						"parameters": {
-							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
-						}
-					}
-				]
-			},
-			{
-				"name": "Dates",
-				"type": "Copy",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "SqlServerSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
-					},
-					"enableStaging": false
-				}
-			},
-			{
-				"name": "sales_outlet",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Dates",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "SqlServerSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
-					},
-					"enableStaging": false
-				}
-			},
-			{
-				"name": "generations",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "201904_sales_reciepts",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -274,7 +201,11 @@
 				"inputs": [
 					{
 						"referenceName": "sql_roii",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "pastry_inventory"
+						}
 					}
 				],
 				"outputs": [
@@ -282,6 +213,228 @@
 						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
+							"file_name": "pastry_inventory.csv",
+							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
+						}
+					}
+				]
+			},
+			{
+				"name": "Dates",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sql_roii",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "dates"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "adls_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"file_name": "dates.csv",
+							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
+						}
+					}
+				]
+			},
+			{
+				"name": "sales_outlet",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Dates",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sql_roii",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "sales_outlet"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "adls_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"file_name": "sales_outlet.csv",
+							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
+						}
+					}
+				]
+			},
+			{
+				"name": "generations",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "201904_sales_reciepts",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sql_roii",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "generations"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "adls_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"file_name": "generations.csv",
 							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
 						}
 					}
@@ -309,6 +462,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -323,8 +485,36 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false
-				}
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sql_roii",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "staff"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "adls_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"file_name": "staff.csv",
+							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
+						}
+					}
+				]
 			},
 			{
 				"name": "sales_targets",
@@ -348,6 +538,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -362,13 +561,32 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
+				"inputs": [
+					{
+						"referenceName": "sql_roii",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "sales_targets"
+						}
+					}
+				],
 				"outputs": [
 					{
 						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
+							"file_name": "sales_targets.csv",
 							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
 						}
 					}
@@ -396,6 +614,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -410,13 +637,32 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
+				"inputs": [
+					{
+						"referenceName": "sql_roii",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "product"
+						}
+					}
+				],
 				"outputs": [
 					{
 						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
+							"file_name": "product.csv",
 							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
 						}
 					}

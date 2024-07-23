@@ -56,7 +56,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": "dbo",
-							"table_name": "201904_sales_reciepts"
+							"table_name": "sales_reciepts"
 						}
 					}
 				],
@@ -65,8 +65,11 @@
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
-							"file_name": "201904_sales_reciepts.csv"
+							"folder_name": {
+								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
+							"file_name": "sales_reciepts.csv"
 						}
 					}
 				]
@@ -134,7 +137,10 @@
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+							"folder_name": {
+								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
 							"file_name": "customer.csv"
 						}
 					}
@@ -203,7 +209,10 @@
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+							"folder_name": {
+								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
 							"file_name": "dates.csv"
 						}
 					}
@@ -272,7 +281,10 @@
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+							"folder_name": {
+								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
 							"file_name": "generations.csv"
 						}
 					}
@@ -341,7 +353,10 @@
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+							"folder_name": {
+								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
 							"file_name": "pastry_inventory.csv"
 						}
 					}
@@ -410,7 +425,10 @@
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+							"folder_name": {
+								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
 							"file_name": "product.csv"
 						}
 					}
@@ -479,7 +497,10 @@
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+							"folder_name": {
+								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
 							"file_name": "sales_outlet.csv"
 						}
 					}
@@ -548,7 +569,10 @@
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+							"folder_name": {
+								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
 							"file_name": "sales_terget.csv"
 						}
 					}
@@ -617,7 +641,10 @@
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "@concat('rholly/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+							"folder_name": {
+								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
 							"file_name": "staff.csv"
 						}
 					}
@@ -696,6 +723,158 @@
 				"linkedServiceName": {
 					"referenceName": "AzureDatabrick_kelompok4",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "dim_product",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_ADLS_rholly",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_name": {
+								"value": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/product')",
+								"type": "Expression"
+							},
+							"file_name": {
+								"value": "*.csv",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "dim_customers",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
+			},
+			{
+				"name": "dim_",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
+			},
+			{
+				"name": "Copy data4",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
+			},
+			{
+				"name": "Copy data5",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
 				}
 			}
 		],

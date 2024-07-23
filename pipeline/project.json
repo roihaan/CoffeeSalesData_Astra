@@ -728,6 +728,159 @@
 			{
 				"name": "dim_product",
 				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/product')",
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"product_sk"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_ADLS_rholly",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_name": ".",
+							"file_name": "."
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Azure_Kelompok3",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dim",
+							"table_name": "product"
+						}
+					}
+				]
+			},
+			{
+				"name": "dim_customers",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/customer')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"customer_sk"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_ADLS_rholly",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_name": ".",
+							"file_name": "."
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Azure_Kelompok3",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dim",
+							"table_name": "customers"
+						}
+					}
+				]
+			},
+			{
+				"name": "dim_staff",
+				"type": "Copy",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
@@ -752,33 +905,61 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/staff')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
 							"type": "DelimitedTextReadSettings"
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"staff_sk"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "CSV_ADLS_rholly",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": {
-								"value": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/product')",
-								"type": "Expression"
-							},
-							"file_name": {
-								"value": "*.csv",
-								"type": "Expression"
-							}
+							"folder_name": ".",
+							"file_name": "."
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Azure_Kelompok3",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dim",
+							"table_name": "staff"
 						}
 					}
 				]
 			},
 			{
-				"name": "dim_customers",
+				"name": "dim_sales_outlet",
 				"type": "Copy",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
@@ -799,11 +980,66 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/sales_outlet')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"sales_outlet_sk"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_ADLS_rholly",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_name": ".",
+							"file_name": "."
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Azure_Kelompok3",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dim",
+							"table_name": "sales_outlet"
+						}
+					}
+				]
 			},
 			{
-				"name": "dim_",
+				"name": "dim date",
 				"type": "Copy",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
@@ -824,11 +1060,66 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/dates')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"transaction_date"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CSV_ADLS_rholly",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_name": ".",
+							"file_name": "."
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Azure_Kelompok3",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dim",
+							"table_name": "dates"
+						}
+					}
+				]
 			},
 			{
-				"name": "Copy data4",
+				"name": "fact sales",
 				"type": "Copy",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
@@ -849,33 +1140,63 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
-			},
-			{
-				"name": "Copy data5",
-				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/fact_sales')",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"transaction_sk"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
 					{
-						"activity": "Notebook1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
+						"referenceName": "CSV_ADLS_rholly",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_name": ".",
+							"file_name": "."
+						}
 					}
 				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"enableStaging": false
-				}
+				"outputs": [
+					{
+						"referenceName": "SQL_Azure_Kelompok3",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "fact",
+							"table_name": "sales"
+						}
+					}
+				]
 			}
 		],
 		"annotations": []

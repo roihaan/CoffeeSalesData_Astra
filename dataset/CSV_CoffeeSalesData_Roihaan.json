@@ -17,16 +17,7 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().File_name",
-					"type": "Expression"
-				},
-				"folderPath": {
-					"value": "@dataset().Folder_name",
-					"type": "Expression"
-				},
-				"fileSystem": "project"
+				"type": "AzureBlobFSLocation"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

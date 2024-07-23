@@ -881,8 +881,6 @@
 			{
 				"name": "dim_staff",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",
@@ -961,8 +959,6 @@
 			{
 				"name": "dim_sales_outlet",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",
@@ -1041,8 +1037,6 @@
 			{
 				"name": "dim date",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",
@@ -1121,8 +1115,6 @@
 			{
 				"name": "fact sales",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",

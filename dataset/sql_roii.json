@@ -6,10 +6,10 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"table_name": {
+			"schema_name": {
 				"type": "string"
 			},
-			"schema_name": {
+			"table_name": {
 				"type": "string"
 			}
 		},

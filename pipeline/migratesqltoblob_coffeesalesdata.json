@@ -43,24 +43,24 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SQL_Roi_CoffeeSalesData",
+						"referenceName": "sql_roii",
 						"type": "DatasetReference",
 						"parameters": {
-							"Schema_name": "dbo",
-							"Table_name": "201904_sales_reciepts"
+							"schema_name": "dbo.",
+							"table_name": "201904_sales_reciepts.csv"
 						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_CoffeeSalesData_Roihaan",
+						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
-							"Folder_name": {
+							"file_name": "201904_sales_reciepts",
+							"folder_name": {
 								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
-							},
-							"File_name": "201904_sales_reciepts.csv"
+							}
 						}
 					}
 				]
@@ -94,36 +94,14 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
-				"inputs": [
-					{
-						"referenceName": "SQL_Roi_CoffeeSalesData",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema_name": "dbo",
-							"Table_name": "customer"
-						}
-					}
-				],
 				"outputs": [
 					{
-						"referenceName": "CSV_CoffeeSalesData_Roihaan",
+						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
-							"Folder_name": {
-								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"File_name": "customer.csv"
+							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
 						}
 					}
 				]
@@ -164,36 +142,14 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
-				"inputs": [
-					{
-						"referenceName": "SQL_Roi_CoffeeSalesData",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema_name": "dbo",
-							"Table_name": "pastry_inventory"
-						}
-					}
-				],
 				"outputs": [
 					{
-						"referenceName": "CSV_CoffeeSalesData_Roihaan",
+						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
-							"Folder_name": {
-								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"File_name": "pastry_inventory.csv"
+							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
 						}
 					}
 				]
@@ -227,39 +183,8 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "SQL_Roi_CoffeeSalesData",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema_name": "dbo",
-							"Table_name": "Dates"
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "CSV_CoffeeSalesData_Roihaan",
-						"type": "DatasetReference",
-						"parameters": {
-							"Folder_name": {
-								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"File_name": "Dates.csv"
-						}
-					}
-				]
+					"enableStaging": false
+				}
 			},
 			{
 				"name": "sales_outlet",
@@ -297,39 +222,8 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "SQL_Roi_CoffeeSalesData",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema_name": "dbo",
-							"Table_name": "sales_outlet"
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "CSV_CoffeeSalesData_Roihaan",
-						"type": "DatasetReference",
-						"parameters": {
-							"Folder_name": {
-								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"File_name": "sales_outlet.csv"
-						}
-					}
-				]
+					"enableStaging": false
+				}
 			},
 			{
 				"name": "generations",
@@ -379,24 +273,16 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SQL_Roi_CoffeeSalesData",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema_name": "dbo",
-							"Table_name": "generations"
-						}
+						"referenceName": "sql_roii",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_CoffeeSalesData_Roihaan",
+						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
-							"Folder_name": {
-								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"File_name": "generations.csv"
+							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
 						}
 					}
 				]
@@ -437,39 +323,8 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "SQL_Roi_CoffeeSalesData",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema_name": "dbo",
-							"Table_name": "staff"
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "CSV_CoffeeSalesData_Roihaan",
-						"type": "DatasetReference",
-						"parameters": {
-							"Folder_name": {
-								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"File_name": "staff.csv"
-						}
-					}
-				]
+					"enableStaging": false
+				}
 			},
 			{
 				"name": "sales_targets",
@@ -507,36 +362,14 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
-				"inputs": [
-					{
-						"referenceName": "SQL_Roi_CoffeeSalesData",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema_name": "dbo",
-							"Table_name": "sales_targets"
-						}
-					}
-				],
 				"outputs": [
 					{
-						"referenceName": "CSV_CoffeeSalesData_Roihaan",
+						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
-							"Folder_name": {
-								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"File_name": "sales_targets.csv"
+							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
 						}
 					}
 				]
@@ -577,36 +410,14 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
-				"inputs": [
-					{
-						"referenceName": "SQL_Roi_CoffeeSalesData",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema_name": "dbo",
-							"Table_name": "product"
-						}
-					}
-				],
 				"outputs": [
 					{
-						"referenceName": "CSV_CoffeeSalesData_Roihaan",
+						"referenceName": "adls_csv",
 						"type": "DatasetReference",
 						"parameters": {
-							"Folder_name": {
-								"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"File_name": "product.csv"
+							"folder_name": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))"
 						}
 					}
 				]

@@ -11,7 +11,9 @@
 			"trustServerCertificate": true,
 			"authenticationType": "SQL",
 			"userName": "sa",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIzZWNiZjljMy1iMTNkLTQ4NGItODkxOS1hNzU0M2EzMjE0YTQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+  project_roihaan
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjMGZiZGM4NC1mYmJiLTRmNGQtODA5Mi1hMjNmMjQ3NWMxOTkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ==" 
+  main
 		},
 		"connectVia": {
 			"referenceName": "localroi",

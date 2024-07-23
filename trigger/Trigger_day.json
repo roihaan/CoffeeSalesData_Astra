@@ -1,0 +1,17 @@
+{
+	"name": "Trigger_day",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2024-07-22T10:52:00",
+				"timeZone": "SE Asia Standard Time"
+			}
+		}
+	}
+}

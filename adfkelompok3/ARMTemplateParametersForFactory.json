@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfkelompok3"
+		},
+		"ADLS_Roihaan_accountKey": {
+			"value": ""
+		},
+		"SQL_local_farid_password": {
+			"value": ""
+		},
+		"SQL_local_roi_password": {
+			"value": ""
+		},
+		"ADLS_Roihaan_properties_typeProperties_url": {
+			"value": "https://storageacckelompok3.dfs.core.windows.net/"
+		},
+		"SQL_local_farid_properties_typeProperties_server": {
+			"value": "DESKTOP-159AUPK"
+		},
+		"SQL_local_farid_properties_typeProperties_database": {
+			"value": "CoffeeSalesData"
+		},
+		"SQL_local_farid_properties_typeProperties_userName": {
+			"value": "sa"
+		},
+		"SQL_local_roi_properties_typeProperties_server": {
+			"value": "DESKTOP-E36FPOQ\\MSSQLSERVER01"
+		},
+		"SQL_local_roi_properties_typeProperties_database": {
+			"value": "CoffeeSalesData"
+		},
+		"SQL_local_roi_properties_typeProperties_userName": {
+			"value": "sa"
+		}
+	}
+}

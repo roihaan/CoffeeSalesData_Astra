@@ -1,0 +1,926 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfkelompok3"
+		},
+		"ADLS_Roihaan_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLS_Roihaan'"
+		},
+		"SQL_local_farid_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SQL_local_farid'"
+		},
+		"SQL_local_roi_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SQL_local_roi'"
+		},
+		"ADLS_Roihaan_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageacckelompok3.dfs.core.windows.net/"
+		},
+		"SQL_local_farid_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "DESKTOP-159AUPK"
+		},
+		"SQL_local_farid_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "CoffeeSalesData"
+		},
+		"SQL_local_farid_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sa"
+		},
+		"SQL_local_roi_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "DESKTOP-E36FPOQ\\MSSQLSERVER01"
+		},
+		"SQL_local_roi_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "CoffeeSalesData"
+		},
+		"SQL_local_roi_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sa"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/migratesqltoblob_coffeesalesdata')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "201904_sales_reciepts",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_Roi_CoffeeSalesData",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema_name": "dbo",
+									"Table_name": "201904_sales_reciepts"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_CoffeeSalesData_Roihaan",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder_name": {
+										"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"File_name": "201904_sales_reciepts.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "customer",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_Roi_CoffeeSalesData",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema_name": "dbo",
+									"Table_name": "customer"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_CoffeeSalesData_Roihaan",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder_name": {
+										"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"File_name": "customer.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "pastry_inventory",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "customer",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_Roi_CoffeeSalesData",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema_name": "dbo",
+									"Table_name": "pastry_inventory"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_CoffeeSalesData_Roihaan",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder_name": {
+										"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"File_name": "pastry_inventory.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "Dates",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_Roi_CoffeeSalesData",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema_name": "dbo",
+									"Table_name": "Dates"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_CoffeeSalesData_Roihaan",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder_name": {
+										"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"File_name": "Dates.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "sales_outlet",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Dates",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_Roi_CoffeeSalesData",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema_name": "dbo",
+									"Table_name": "sales_outlet"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_CoffeeSalesData_Roihaan",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder_name": {
+										"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"File_name": "sales_outlet.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "generations",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "201904_sales_reciepts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_Roi_CoffeeSalesData",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema_name": "dbo",
+									"Table_name": "generations"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_CoffeeSalesData_Roihaan",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder_name": {
+										"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"File_name": "generations.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "staff",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "sales_outlet",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_Roi_CoffeeSalesData",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema_name": "dbo",
+									"Table_name": "staff"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_CoffeeSalesData_Roihaan",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder_name": {
+										"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"File_name": "staff.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "sales_targets",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "pastry_inventory",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_Roi_CoffeeSalesData",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema_name": "dbo",
+									"Table_name": "sales_targets"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_CoffeeSalesData_Roihaan",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder_name": {
+										"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"File_name": "sales_targets.csv"
+								}
+							}
+						]
+					},
+					{
+						"name": "product",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "generations",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQL_Roi_CoffeeSalesData",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema_name": "dbo",
+									"Table_name": "product"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CSV_CoffeeSalesData_Roihaan",
+								"type": "DatasetReference",
+								"parameters": {
+									"Folder_name": {
+										"value": "@concat('roihaan/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"File_name": "product.csv"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_Roi_CoffeeSalesData')]",
+				"[concat(variables('factoryId'), '/datasets/CSV_CoffeeSalesData_Roihaan')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_CoffeeSalesData_Roihaan')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_Roihaan",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Folder_name": {
+						"type": "string"
+					},
+					"File_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().File_name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().Folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": "project"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "transaction_id",
+						"type": "String"
+					},
+					{
+						"name": "transaction_date",
+						"type": "String"
+					},
+					{
+						"name": "transaction_time",
+						"type": "String"
+					},
+					{
+						"name": "sales_outlet_id",
+						"type": "String"
+					},
+					{
+						"name": "staff_id",
+						"type": "String"
+					},
+					{
+						"name": "customer_id",
+						"type": "String"
+					},
+					{
+						"name": "instore_yn",
+						"type": "String"
+					},
+					{
+						"name": "order",
+						"type": "String"
+					},
+					{
+						"name": "line_item_id",
+						"type": "String"
+					},
+					{
+						"name": "product_id",
+						"type": "String"
+					},
+					{
+						"name": "quantity",
+						"type": "String"
+					},
+					{
+						"name": "line_item_amount",
+						"type": "String"
+					},
+					{
+						"name": "unit_price",
+						"type": "String"
+					},
+					{
+						"name": "promo_item_yn",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_Roihaan')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Roi_CoffeeSalesData')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SQL_local_roi",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Schema_name": {
+						"type": "string"
+					},
+					"Table_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().Schema_name",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().Table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SQL_local_roi')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_Roihaan')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLS_Roihaan_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLS_Roihaan_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "localroi",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/localroi')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_local_farid')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('SQL_local_farid_properties_typeProperties_server')]",
+					"database": "[parameters('SQL_local_farid_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('SQL_local_farid_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SQL_local_farid_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "localfarid",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/localfarid')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_local_roi')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('SQL_local_roi_properties_typeProperties_server')]",
+					"database": "[parameters('SQL_local_roi_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('SQL_local_roi_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SQL_local_roi_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "localroi",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/localroi')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/localfarid')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/localrholly')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/localroi')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		}
+	]
+}

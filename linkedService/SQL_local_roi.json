@@ -5,18 +5,11 @@
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"server": "DESKTOP-E36FPOQ\\MSSQLSERVER01",
-			"database": "CoffeeSalesData",
-			"encrypt": "mandatory",
-			"trustServerCertificate": true,
-			"authenticationType": "SQL",
-			"userName": "sa",
-  project_roihaan
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjMGZiZGM4NC1mYmJiLTRmNGQtODA5Mi1hMjNmMjQ3NWMxOTkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ==" 
-  main
+			"connectionString": "integrated security=False;data source=DESKTOP-E36FPOQ\\MSSQLSERVER01;initial catalog=CoffeeSalesData;user id=sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxZWI5NGE3Yi1iMTI5LTRiOWYtODNhMC1lYThmZjlkOWZhYzkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
-			"referenceName": "localroi",
+			"referenceName": "localroihaan",
 			"type": "IntegrationRuntimeReference"
 		}
 	}

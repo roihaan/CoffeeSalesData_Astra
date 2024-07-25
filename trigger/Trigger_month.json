@@ -1,0 +1,28 @@
+{
+	"name": "Trigger_month",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Month",
+				"interval": 1,
+				"startTime": "2024-07-25T00:20:00",
+				"timeZone": "SE Asia Standard Time",
+				"schedule": {
+					"minutes": [
+						50
+					],
+					"hours": [
+						23
+					],
+					"monthDays": [
+						-1
+					]
+				}
+			}
+		}
+	}
+}

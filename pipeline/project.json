@@ -5,6 +5,8 @@
 			{
 				"name": "Sales_Reciepts",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -19,13 +21,14 @@
 						"type": "SqlServerSource",
 						"additionalColumns": [
 							{
-								"name": "ingest_time",
+								"name": "ingestion_time",
 								"value": {
 									"value": "@utcNow()",
 									"type": "Expression"
 								}
 							}
 						],
+						"sqlReaderQuery": "SELECT *\nFROM sales_reciepts\nWHERE transaction_date = CAST(GetDate() AS date)",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -52,7 +55,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SQL_local_rholly",
+						"referenceName": "SQL_CoffeeSalesData",
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": "dbo",
@@ -62,11 +65,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CSV_ADLS_rholly",
+						"referenceName": "CSV_ADLS_farid",
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": {
-								"value": "@concat('rholly/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
+								"value": "@concat('farid/raw/', formatDateTime(utcNow(), 'yyyyMMdd'))",
 								"type": "Expression"
 							},
 							"file_name": "sales_reciepts.csv"
@@ -77,6 +80,8 @@
 			{
 				"name": "Customer",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -149,6 +154,8 @@
 			{
 				"name": "Dates",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -221,6 +228,8 @@
 			{
 				"name": "Generations",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -293,6 +302,8 @@
 			{
 				"name": "Pastry_Inventory",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -384,8 +395,13 @@
 									"value": "@utcNow()",
 									"type": "Expression"
 								}
+							},
+							{
+								"name": "status",
+								"value": "1"
 							}
 						],
+						"sqlReaderQuery": "where status = 0 ",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -437,6 +453,8 @@
 			{
 				"name": "Sales_Outlets",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -509,6 +527,8 @@
 			{
 				"name": "Sales_Targets",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -581,6 +601,8 @@
 			{
 				"name": "Staff",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -653,6 +675,8 @@
 			{
 				"name": "Notebook1",
 				"type": "DatabricksNotebook",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Sales_Reciepts",
@@ -728,6 +752,8 @@
 			{
 				"name": "dim_product",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",
@@ -750,7 +776,10 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/product')",
+							"wildcardFolderPath": {
+								"value": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/product')",
+								"type": "Expression"
+							},
 							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
@@ -803,6 +832,8 @@
 			{
 				"name": "dim_customers",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",
@@ -881,6 +912,8 @@
 			{
 				"name": "dim_staff",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",
@@ -959,6 +992,8 @@
 			{
 				"name": "dim_sales_outlet",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",
@@ -1037,6 +1072,8 @@
 			{
 				"name": "dim date",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",
@@ -1115,6 +1152,8 @@
 			{
 				"name": "fact sales",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Notebook1",
@@ -1137,10 +1176,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": {
-								"value": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/fact_sales')",
-								"type": "Expression"
-							},
+							"wildcardFolderPath": "@concat('rholly/currated/', formatDateTime(utcNow(), 'yyyyMMdd'),'/staff')",
 							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
